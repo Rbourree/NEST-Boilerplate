@@ -38,4 +38,19 @@ export class Article {
         this.content = newContent;
     }
 
+    /**
+     * @description Updates the article with new data.
+     * @param {Partial<Article>} data - The new data to update the article with.
+     * @returns {void}
+     */
+    update(data: Partial<Article>): void {
+        if (data.title) {
+            this.updateTitle(data.title);
+        }
+        if (data.content) {
+            this.updateContent(data.content);
+        }
+        this.updatedAt = new Date();
+    }
+
 }

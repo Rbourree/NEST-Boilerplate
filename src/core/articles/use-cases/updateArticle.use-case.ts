@@ -11,7 +11,16 @@ export class UpdateArticleUseCase {
    * @returns L'article mis à jour ou null en cas d'échec.
    */
   async execute(id_article: string, articleData: Partial<Article>): Promise<Article | null> {
-    const article = await this.articleRepository.update(id_article, articleData);
-    return article;
+    const article = await this.articleRepository.findById(id_article);
+    if (!article) {
+      throw new Error(`Article with ID ${id_article} not found`);
+    }
+
+    article.update(articleData);
+    const updatedArticle = await this.articleRepository.update(id_article, article);
+    if (!updatedArticle) {
+      throw new Error(`Failed to update article with ID ${id_article}`);
+    }
+    return updatedArticle;
   }
 }
