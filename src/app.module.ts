@@ -1,6 +1,6 @@
 import { Module, Global } from '@nestjs/common';
-import { PrismaModule } from "../prisma/prisma.module";
-import { UsersModule } from "./infrastructure/users.module";
+import { PrismaModule } from "./infrastructure/prisma/prisma.module";
+import { UsersModule } from "./presentation/users/users.module";
 import { JwtAuthGuard } from './common/auth.guard';
 import { JWTService } from './common/jwt.service';
 import { JwtModule } from "@nestjs/jwt";
@@ -15,4 +15,4 @@ import { JwtModule } from "@nestjs/jwt";
   providers: [JwtAuthGuard, JWTService],
   exports: [JwtAuthGuard, JWTService],
 })
-export class AppModule { }
+export class AppModule {}

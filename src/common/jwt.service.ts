@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { TokenService } from '../core/users/domain/token.interface';
+import { IJWTService } from '../core/users/jwt.interface';
 
 @Injectable()
-export class JWTService implements TokenService {
+export class JWTService implements IJWTService {
   constructor(private readonly jwtService: JwtService) {}
 
   async createAccessToken(payload: { id_user: string }): Promise<string> {

@@ -1,16 +1,18 @@
 import { Controller, Post, Body, HttpStatus, HttpException } from '@nestjs/common';
-import { AuthService } from '../../core/users/application/services/auth.service';
-import { SignInDto } from '../dtos/sign-in.dto';
-import { SignUpDto } from '../dtos/sign-up.dto';
+import { SignInUseCase } from '../../core/users/use-cases/signin.use-case';
+import { SignUpUseCase } from '../../core/users/use-cases/signup.use-case';
+
+import { SignInDto } from './dtos/sign-in.dto';
+import { SignUpDto } from './dtos/sign-up.dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly signInService: SignInUseCase, private readonly signUpService: SignUpUseCase) {}
 
     @Post('signin')
     async signIn(@Body() signInDto: SignInDto) {
         try {
-            const user = await this.authService.signIn(signInDto.email, signInDto.password);
+            const user = await this.signInService.execute(signInDto.email, signInDto.password);
             if (!user) {
                 throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
             }
@@ -25,7 +27,7 @@ export class AuthController {
     @Post('signup')
     async signUp(@Body() signUpDto: SignUpDto) {
         try {
-            const newUser = await this.authService.signUp(signUpDto.email, signUpDto.password);
+            const newUser = await this.signUpService.execute(signUpDto.email, signUpDto.password);
             return newUser;
         } catch (error) {
             throw new HttpException(error.message || 'Sign-up failed', HttpStatus.BAD_REQUEST);

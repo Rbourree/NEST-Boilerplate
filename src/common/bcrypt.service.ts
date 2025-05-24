@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { Hasher } from '../core/users/domain/hasher.interface';
+import { IBcryptService } from '../core/users/bcrypt.interface';
 
 @Injectable()
-export class BcryptHasher implements Hasher {
-  async hash(value: string): Promise<string> {    
+export class BcryptService implements IBcryptService {
+  async hash(value: string): Promise<string> {
     const salt = await bcrypt.genSalt();
     return bcrypt.hash(value, salt);
   }
