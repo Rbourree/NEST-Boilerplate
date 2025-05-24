@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './core/application/services/users.service';
-import { AuthService } from './core/application/services/auth.service';
+import { UsersService } from '../core/users/application/services/users.service';
+import { AuthService } from '../core/users/application/services/auth.service';
 import { BcryptHasher } from '../common/bcrypt.service';
 import { JWTService } from '../common/jwt.service';
-import { UsersRepositoryPrisma } from './infrastructure/repositories/users.prisma.repository';
-import { AuthController } from "./presentation/http/auth.controller";
-import { UsersController } from "./presentation/http/users.controller";
+import { UsersRepositoryPrisma } from './repositories/users.prisma.repository';
+import { AuthController } from "../presentation/http/auth.controller";
+import { UsersController } from "../presentation/http/users.controller";
 
 
 @Module({

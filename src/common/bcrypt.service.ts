@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { Hasher } from '../users/core/domain/hasher.interface';
+import { Hasher } from '../core/users/domain/hasher.interface';
 
 @Injectable()
 export class BcryptHasher implements Hasher {
