@@ -40,5 +40,5 @@ model Article {
   id_user      String    @db.Uuid
   createdAt    DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt    DateTime  @updatedAt @db.Timestamptz(6)
-  user         User      @relation(fields: [id_user], references: [id_user])
+  user         User      @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
 }
