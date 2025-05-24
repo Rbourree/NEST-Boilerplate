@@ -7,11 +7,11 @@ export class JWTService implements IJWTService {
   constructor(private readonly jwtService: JwtService) {}
 
   async createAccessToken(payload: { id_user: string }): Promise<string> {
-    return this.jwtService.signAsync(payload, { expiresIn: process.env.JWT_ACCESS_EXPIRATION || '1h' });
+    return this.jwtService.signAsync(payload);
   }
 
   async createRefreshToken(payload: { id_user: string }): Promise<string> {
-    return this.jwtService.signAsync(payload, { expiresIn: process.env.JWT_REFRESH_EXPIRATION || '7d' });
+    return this.jwtService.signAsync(payload);
   }
 
   async verifyToken(token: string): Promise<any> {

@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { ArticleRepository } from '../article.repository';
 import { Article } from '../article.entity';
 
-@Injectable()
 export class DeleteArticleUseCase {
   constructor(private readonly articleRepository: ArticleRepository) {}
 
