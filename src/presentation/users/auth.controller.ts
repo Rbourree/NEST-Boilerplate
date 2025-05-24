@@ -17,9 +17,7 @@ export class AuthController {
                 throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
             }
             return user;
-        } catch (error) {
-            console.log('Sign-in error:', error);
-            
+        } catch (error) {           
             throw new HttpException(error.message || 'Sign-in failed', HttpStatus.UNAUTHORIZED);
         }
     }

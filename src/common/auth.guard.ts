@@ -18,13 +18,11 @@ export class JwtAuthGuard implements CanActivate {
     const token = auth.split(' ')[1];
     let payload;
     try {
-      // Vérifie et décode le JWT
       payload = await this.tokenService.verifyToken(token);
     } catch (err) {
       throw new UnauthorizedException('Invalid or expired token');
     }
 
-    // On rattache le payload décodé à la requête
     req.headers['user'] = payload;
 
     return true;
