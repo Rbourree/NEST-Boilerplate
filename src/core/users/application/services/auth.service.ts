@@ -2,13 +2,12 @@ import { UserRepository } from '../user.repository';
 import { User } from "../../domain/user.entity";
 import { Hasher } from "../../domain/hasher.interface";
 import { TokenService } from "../../domain/token.interface";
-import { Inject } from '@nestjs/common';
 
 export class AuthService {
     constructor(
-        @Inject('UserRepository') private readonly userRepository: UserRepository,
-        @Inject('Hasher') private readonly hasher: Hasher,
-        @Inject('TokenService') private readonly tokenService: TokenService
+        private readonly userRepository: UserRepository,
+        private readonly hasher: Hasher,
+        private readonly tokenService: TokenService
     ) { }
 
     /**

@@ -1,10 +1,9 @@
 import { UserRepository } from '../user.repository';
 import { User } from "../../domain/user.entity";
-import { Inject } from '@nestjs/common';
 
 export class UsersService {
     constructor(
-        @Inject('UserRepository') private readonly userRepository: UserRepository,
+        private readonly userRepository: UserRepository,
     ) { }
 
     /**
@@ -44,6 +43,16 @@ export class UsersService {
     */
     async findAll(): Promise<User[]> {
         return await this.userRepository.findAll();
+    }
+
+    /**
+    * Find user by email.
+    * @param email - The user's email address.
+    * @returns The user.
+    * @throws Error if the user is not found.
+    */
+    async findByEmail(email: string): Promise<User | null> {
+        return await this.userRepository.findByEmail(email);
     }
 
 }

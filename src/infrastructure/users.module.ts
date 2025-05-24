@@ -1,12 +1,23 @@
+// Framework: NestJS
 import { Module } from '@nestjs/common';
-import { UsersService } from '../core/users/application/services/users.service';
-import { AuthService } from '../core/users/application/services/auth.service';
+
+// Common layer imports
 import { BcryptHasher } from '../common/bcrypt.service';
 import { JWTService } from '../common/jwt.service';
-import { UsersRepositoryPrisma } from './repositories/users.prisma.repository';
-import { AuthController } from "../presentation/http/auth.controller";
-import { UsersController } from "../presentation/http/users.controller";
 
+// Application layer imports
+import { UserRepository } from 'src/core/users/application/user.repository';
+import { UsersService } from '../core/users/application/services/users.service';
+import { AuthService } from '../core/users/application/services/auth.service';
+
+// Domain layer imports
+import { TokenService } from 'src/core/users/domain/token.interface';
+import { Hasher } from 'src/core/users/domain/hasher.interface';
+
+// Infrastructure layer imports
+import { UsersController } from "../presentation/http/users.controller";
+import { AuthController } from "../presentation/http/auth.controller";
+import { UsersRepositoryPrisma } from './repositories/users.prisma.repository';
 
 @Module({
   imports: [],
@@ -26,6 +37,16 @@ import { UsersController } from "../presentation/http/users.controller";
       provide: 'TokenService',
       useClass: JWTService,
     },
+    {
+      provide: UsersService,
+      useFactory: (repo: UserRepository) => new UsersService(repo),
+      inject: ['UserRepository']
+    },
+    {
+      provide: AuthService,
+      useFactory: (repo: UserRepository, hasher: Hasher, tokenService: TokenService) => new AuthService(repo, hasher, tokenService),
+      inject: ['UserRepository', 'Hasher', 'TokenService']
+    }
   ],
 })
-export class UsersModule {}
+export class UsersModule { }

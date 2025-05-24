@@ -16,6 +16,8 @@ export class AuthController {
             }
             return user;
         } catch (error) {
+            console.log('Sign-in error:', error);
+            
             throw new HttpException(error.message || 'Sign-in failed', HttpStatus.UNAUTHORIZED);
         }
     }
@@ -29,4 +31,4 @@ export class AuthController {
             throw new HttpException(error.message || 'Sign-up failed', HttpStatus.BAD_REQUEST);
         }
     }
-}
+} 
