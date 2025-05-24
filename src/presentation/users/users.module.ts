@@ -12,9 +12,15 @@ import { UsersRepositoryPrisma } from '../../infrastructure/repositories/users.p
 
 // Core layer imports
 import { UserRepository } from 'src/core/users/user.repository';
-import { IJWTService } from 'src/core/users/jwt.interface';
-import { IBcryptService } from 'src/core/users/bcrypt.interface';
-import { SignInUseCase, SignUpUseCase, GetMeUseCase, GetUserByIDUseCase } from "../../core/users/use-cases";
+import { IJWTService } from 'src/core/shared/jwt.interface';
+import { IBcryptService } from 'src/core/shared/bcrypt.interface';
+import {
+  SignInUseCase,
+  SignUpUseCase,
+  GetMeUseCase,
+  GetUserByIDUseCase,
+  UpdateUserUseCase
+} from "../../core/users/use-cases";
 
 
 
@@ -52,6 +58,11 @@ import { SignInUseCase, SignUpUseCase, GetMeUseCase, GetUserByIDUseCase } from "
     {
       provide: GetUserByIDUseCase,
       useFactory: (repo: UserRepository) => new GetUserByIDUseCase(repo),
+      inject: ['UserRepository']
+    },
+    {
+      provide: UpdateUserUseCase,
+      useFactory: (repo: UserRepository) => new UpdateUserUseCase(repo),
       inject: ['UserRepository']
     }
   ],

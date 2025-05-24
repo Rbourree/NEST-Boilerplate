@@ -33,10 +33,10 @@ constructor() {}
 
     /**
      * Deletes a user by their ID.
-     * @param id - The ID of the user to delete.
+     * @param id_user - The ID of the user to delete.
      * @returns A promise that resolves when the user is deleted.
      */
-    abstract delete(id: string): Promise<void>;
+    abstract delete(id_user: string): Promise<void>;
 
     /**
      * Updates a user.

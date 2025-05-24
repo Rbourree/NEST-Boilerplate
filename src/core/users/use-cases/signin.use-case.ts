@@ -1,7 +1,7 @@
 import { UserRepository } from '../user.repository';
 import { User } from "../user.entity";
-import { IBcryptService } from "../bcrypt.interface";
-import { IJWTService } from "../jwt.interface";
+import { IBcryptService } from "../../shared/bcrypt.interface";
+import { IJWTService } from "../../shared/jwt.interface";
 
 export class SignInUseCase {
     constructor(

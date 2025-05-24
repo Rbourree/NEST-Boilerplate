@@ -17,6 +17,8 @@ export class User {
         Object.assign(this, data); // Copie toutes les clés de l'objet dans l'instance
     }
 
+
+
     /**
      * @param {string} newFirstname - The new first name of the user.
      * @throws {Error} If the new first name is empty.
@@ -164,22 +166,20 @@ export class User {
     }
 
     /**
-     * @param {User} other - The other user to compare with.
-     * @description Compares two users for equality.
-     * @returns {boolean} True if the users are equal, false otherwise.
+     * @param {Partial<User>} data - The data to update the user with.
+     * @description Updates the user with the provided data.
+     * @returns {void}
      */
-    equals(other: User): boolean {
-        return this.id_user === other.id_user &&
-            this.firstname === other.firstname &&
-            this.lastname === other.lastname &&
-            this.email === other.email &&
-            this.password === other.password &&
-            this.address === other.address &&
-            this.city === other.city &&
-            this.state === other.state &&
-            this.country === other.country &&
-            this.zipCode === other.zipCode &&
-            this.dateOfBirth?.getTime() === other.dateOfBirth?.getTime() &&
-            this.phone === other.phone;
+    update(data: Partial<User>): void {
+        if (data.firstname) this.updateFirstname(data.firstname);
+        if (data.lastname) this.updateLastname(data.lastname);
+        if (data.email) this.updateEmail(data.email);
+        if (data.address) this.updateAddress(data.address);
+        if (data.city) this.updateCity(data.city);
+        if (data.state) this.updateState(data.state);
+        if (data.country) this.updateCountry(data.country);
+        if (data.zipCode) this.updatePostalCode(data.zipCode);
+        if (data.dateOfBirth) this.updateDateOfBirth(data.dateOfBirth);
+        if (data.phone) this.updatePhone(data.phone);
     }
 }

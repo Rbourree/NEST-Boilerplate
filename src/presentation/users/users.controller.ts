@@ -1,11 +1,15 @@
 import { Controller, Get, Headers, UseGuards, HttpStatus, HttpException, Param, Patch, Delete } from '@nestjs/common';
-import { GetMeUseCase, GetUserByIDUseCase} from '../../core/users/use-cases'
+import { GetMeUseCase, GetUserByIDUseCase, UpdateUserUseCase} from '../../core/users/use-cases'
 
 import { JwtAuthGuard } from '../../common/auth.guard';
 
 @Controller()
 export class UsersController {
-    constructor(private readonly getMeUseCase: GetMeUseCase, private readonly getUserByIDUseCase: GetUserByIDUseCase) { }
+    constructor(
+        private readonly getMeUseCase: GetMeUseCase, 
+        private readonly getUserByIDUseCase: GetUserByIDUseCase, 
+        private readonly updateUserUseCase: UpdateUserUseCase
+    ) { }
 
     @Get('/user/me')
     @UseGuards(JwtAuthGuard)
@@ -37,18 +41,18 @@ export class UsersController {
     //     return users;
     // }
 
-    // @Patch('/user/:id_user')
-    // @UseGuards(JwtAuthGuard)
-    // async updateUser(@Param('id_user') id_user: string, @Headers('user') currentUser: any) {
-    //     if (id_user !== currentUser.id_user) {
-    //         throw new HttpException('You can only update your own user', HttpStatus.FORBIDDEN);
-    //     }
-    //     const updatedUser = await this.usersService.update(id_user, currentUser);
-    //     if (!updatedUser) {
-    //         throw new HttpException('User not found or update failed', HttpStatus.NOT_FOUND);
-    //     }
-    //     return updatedUser;
-    // }
+    @Patch('/user/:id_user')
+    @UseGuards(JwtAuthGuard)
+    async updateUser(@Param('id_user') id_user: string, @Headers('user') currentUser: any) {
+        if (id_user !== currentUser.id_user) {
+            throw new HttpException('You can only update your own user', HttpStatus.FORBIDDEN);
+        }
+        const updatedUser = await this.updateUserUseCase.execute(id_user, currentUser);
+        if (!updatedUser) {
+            throw new HttpException('User not found or update failed', HttpStatus.NOT_FOUND);
+        }
+        return updatedUser;
+    }
 
     // @Delete('/user/:id_user')
     // @UseGuards(JwtAuthGuard)
