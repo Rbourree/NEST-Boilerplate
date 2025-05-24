@@ -19,7 +19,9 @@ import {
   SignUpUseCase,
   GetMeUseCase,
   GetUserByIDUseCase,
-  UpdateUserUseCase
+  UpdateUserUseCase,
+  GetAllUsersUseCase,
+  DeleteUserUseCase
 } from "../../core/users/use-cases";
 
 
@@ -63,6 +65,16 @@ import {
     {
       provide: UpdateUserUseCase,
       useFactory: (repo: UserRepository) => new UpdateUserUseCase(repo),
+      inject: ['UserRepository']
+    },
+    {
+      provide: GetAllUsersUseCase,
+      useFactory: (repo: UserRepository) => new GetAllUsersUseCase(repo),
+      inject: ['UserRepository']
+    },
+    {
+      provide: DeleteUserUseCase,
+      useFactory: (repo: UserRepository) => new DeleteUserUseCase(repo),
       inject: ['UserRepository']
     }
   ],

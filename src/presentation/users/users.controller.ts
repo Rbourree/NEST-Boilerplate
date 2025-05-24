@@ -1,14 +1,22 @@
 import { Controller, Get, Headers, UseGuards, HttpStatus, HttpException, Param, Patch, Delete } from '@nestjs/common';
-import { GetMeUseCase, GetUserByIDUseCase, UpdateUserUseCase} from '../../core/users/use-cases'
-
 import { JwtAuthGuard } from '../../common/auth.guard';
+
+import { 
+    GetMeUseCase, 
+    GetUserByIDUseCase, 
+    UpdateUserUseCase, 
+    GetAllUsersUseCase,
+    DeleteUserUseCase
+} from '../../core/users/use-cases'
 
 @Controller()
 export class UsersController {
     constructor(
-        private readonly getMeUseCase: GetMeUseCase, 
-        private readonly getUserByIDUseCase: GetUserByIDUseCase, 
-        private readonly updateUserUseCase: UpdateUserUseCase
+        private readonly getMeUseCase: GetMeUseCase,
+        private readonly getUserByIDUseCase: GetUserByIDUseCase,
+        private readonly updateUserUseCase: UpdateUserUseCase,
+        private readonly getAllUsersUseCase: GetAllUsersUseCase,
+        private readonly deleteUserUseCase: DeleteUserUseCase
     ) { }
 
     @Get('/user/me')
@@ -31,15 +39,11 @@ export class UsersController {
         return user;
     }
 
-    // @Get('/users')
-    // @UseGuards(JwtAuthGuard)
-    // async getAll() {
-    //     const users = await this.usersService.findAll();
-    //     if (!users) {
-    //         throw new HttpException('No users found', HttpStatus.NOT_FOUND);
-    //     }
-    //     return users;
-    // }
+    @Get('/users')
+    @UseGuards(JwtAuthGuard)
+    async getAll() {
+        return await this.getAllUsersUseCase.execute();
+    }
 
     @Patch('/user/:id_user')
     @UseGuards(JwtAuthGuard)
@@ -54,13 +58,16 @@ export class UsersController {
         return updatedUser;
     }
 
-    // @Delete('/user/:id_user')
-    // @UseGuards(JwtAuthGuard)
-    // async deleteUser(@Param('id_user') id_user: string, @Headers('user') currentUser: any) {
-    //     if (id_user !== currentUser.id_user) {
-    //         throw new HttpException('You can only delete your own user', HttpStatus.FORBIDDEN);
-    //     }
-    //     await this.usersService.delete(id_user);
-    //     return { message: 'User deleted successfully' };
-    // }
+    @Delete('/user/:id_user')
+    @UseGuards(JwtAuthGuard)
+    async deleteUser(@Param('id_user') id_user: string, @Headers('user') currentUser: any) {
+        if (id_user !== currentUser.id_user) {
+            throw new HttpException('You can only delete your own user', HttpStatus.FORBIDDEN);
+        }
+        let user =await this.deleteUserUseCase.execute(id_user);
+        if (!user) {
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        }
+        return { message: 'User deleted successfully' };
+    }
 }
