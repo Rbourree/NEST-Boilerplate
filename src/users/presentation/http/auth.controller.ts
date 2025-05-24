@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, HttpException } from '@nestjs/common';
 import { AuthService } from '../../core/application/services/auth.service';
 import { SignInDto } from '../dtos/sign-in.dto';
 import { SignUpDto } from '../dtos/sign-up.dto';
@@ -8,7 +8,6 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('signin')
-    @HttpCode(HttpStatus.OK)
     async signIn(@Body() signInDto: SignInDto) {
         try {
             const user = await this.authService.signIn(signInDto.email, signInDto.password);

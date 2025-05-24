@@ -13,26 +13,35 @@ export class UsersRepositoryPrisma implements UserRepository {
                 email,
                 password,
             },
+            omit: {
+                password: true,
+                refreshToken: true,
+            },
         }).catch((error) => {
             throw new Error(`Failed to create user: ${error.message}`);
         });
-        return new User(user.id_user, user.email, user.password);
+        return new User(user);
     }
 
-    async findById(id_user: string): Promise<User> {
+    async findById(id_user: string): Promise<User | null> {
         const user = await this.prisma.user.findUnique({
             where: { id_user },
+            omit: {
+                password: true,
+                refreshToken: true,
+            },
         });
-        if (!user) throw new Error(`User with id ${id_user} not found`);
-        return new User(user.id_user, user.email, user.password);
+        return user ? new User(user) : null;
     }
 
     async findByEmail(email: string): Promise<User | null> {
         const user = await this.prisma.user.findUnique({
             where: { email },
+            omit: {
+                refreshToken: true,
+            },
         });
-        if (!user) return null;
-        return new User(user.id_user, user.email, user.password);
+        return user ? new User(user) : null;
     }
 
     async update(id_user: string, user: User): Promise<User> {
@@ -42,10 +51,16 @@ export class UsersRepositoryPrisma implements UserRepository {
                 email: user.email,
                 password: user.password,
             },
+            omit: {
+                password: true,
+                refreshToken: true,
+            },
         }).catch((error) => {
             throw new Error(`Failed to update user: ${error.message}`);
         });
-        return new User(updatedUser.id_user, updatedUser.email, updatedUser.password);
+        if (!updatedUser) throw new Error(`User with id ${id_user} not found`);
+
+        return new User(updatedUser);
     }
 
     async updateRefreshToken(id_user: string, refreshToken: string): Promise<User> {
@@ -54,10 +69,14 @@ export class UsersRepositoryPrisma implements UserRepository {
             data: {
                 refreshToken,
             },
+            omit: {
+                password: true,
+                refreshToken: true,
+            },
         }).catch((error) => {
             throw new Error(`Failed to update refresh token: ${error.message}`);
         });
-        return new User(updatedUser.id_user, updatedUser.email, updatedUser.password);
+        return new User(updatedUser);
     }
 
     async delete(id_user: string): Promise<void> {
@@ -68,7 +87,7 @@ export class UsersRepositoryPrisma implements UserRepository {
 
     async findAll(): Promise<User[]> {
         const users = await this.prisma.user.findMany();
-        return users.map((user) => new User(user.id_user, user.email, user.password));
+        return users.map((user) => new User(user));
     }
 
 }

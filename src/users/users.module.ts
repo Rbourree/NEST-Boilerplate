@@ -1,24 +1,18 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './core/application/services/user.service';
+import { UsersService } from './core/application/services/users.service';
 import { AuthService } from './core/application/services/auth.service';
-import { BcryptHasher } from './infrastructure/services/bcrypt.hasher';
-import { JwtTokenService } from './infrastructure/services/jwt.token.service';
-import { JwtModule  } from "@nestjs/jwt";
+import { BcryptHasher } from '../common/bcrypt.service';
+import { JWTService } from '../common/jwt.service';
 import { UsersRepositoryPrisma } from './infrastructure/repositories/users.prisma.repository';
 import { AuthController } from "./presentation/http/auth.controller";
+import { UsersController } from "./presentation/http/users.controller";
 
 
 @Module({
-  imports: [
-    JwtModule.register({
-      global: true,
-      secret: process.env.JWT_SECRET || 'default',
-      signOptions: { expiresIn: '60s' },
-    }),
-  ],
-  controllers: [AuthController],
+  imports: [],
+  controllers: [AuthController, UsersController],
   providers: [
-    UserService,
+    UsersService,
     AuthService,
     {
       provide: 'UserRepository',
@@ -30,7 +24,7 @@ import { AuthController } from "./presentation/http/auth.controller";
     },
     {
       provide: 'TokenService',
-      useClass: JwtTokenService,
+      useClass: JWTService,
     },
   ],
 })

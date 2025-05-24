@@ -20,6 +20,7 @@ export class AuthService {
     */
     async signIn(email: string, password: string): Promise<User & { access: string; refresh: string }> {
         const user = await this.userRepository.findByEmail(email);
+        
         if (!user || !(await this.hasher.compare(password, user.password))) {
             throw new Error('Invalid email or password');
         }
@@ -56,6 +57,6 @@ export class AuthService {
         const refresh = await this.tokenService.createRefreshToken(payload);
         const refreshHash = await this.hasher.hash(refresh);
         await this.userRepository.updateRefreshToken(createdUser.id_user, refreshHash);
-        return Object.assign(new User(createdUser.id_user, createdUser.email, createdUser.password), { access, refresh });
+        return Object.assign(new User(createdUser), { access, refresh });
     }
 }

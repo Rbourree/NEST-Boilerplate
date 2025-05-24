@@ -1,8 +1,11 @@
 import { UserRepository } from '../user.repository';
 import { User } from "../../domain/user.entity";
+import { Inject } from '@nestjs/common';
 
-export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+export class UsersService {
+    constructor(
+        @Inject('UserRepository') private readonly userRepository: UserRepository,
+    ) { }
 
     /**
     * Find a user by id_user.

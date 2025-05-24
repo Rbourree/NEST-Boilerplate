@@ -1,19 +1,21 @@
 
 export class User {
-    constructor(
-        public readonly id_user: string,
-        public email: string,
-        public password: string,
-        public firstname?: string,
-        public lastname?: string,
-        public address?: string,
-        public city?: string,
-        public state?: string,
-        public country?: string,
-        public zipCode?: string,
-        public dateOfBirth?: Date,
-        public phone?: string,
-    ) {}
+    public readonly id_user: string
+    public email: string
+    public password: string
+    public firstname?: string | null
+    public lastname?: string | null
+    public address?: string | null
+    public city?: string | null
+    public state?: string | null
+    public country?: string | null
+    public zipCode?: string | null
+    public dateOfBirth?: Date | null
+    public phone?: string | null
+
+    constructor(data: Partial<User>) {
+        Object.assign(this, data); // Copie toutes les clés de l'objet dans l'instance
+    }
 
     /**
      * @param {string} newFirstname - The new first name of the user.
