@@ -9,6 +9,7 @@ import { JWTService } from '../../common/jwt.service';
 import { UsersController } from "./users.controller";
 import { AuthController } from "./auth.controller";
 import { UsersRepositoryPrisma } from '../../infrastructure/repositories/users.prisma.repository';
+import { UserMapper } from '../../infrastructure/mapper/user.mapper';
 
 // Core layer imports
 import { UserRepository } from 'src/core/users/user.repository';
@@ -41,6 +42,10 @@ import {
     {
       provide: 'IJWTService',
       useClass: JWTService,
+    },
+    {
+      provide: 'UserMapper',
+      useClass: UserMapper,
     },
     {
       provide: SignInUseCase,
@@ -78,5 +83,6 @@ import {
       inject: ['UserRepository']
     }
   ],
+  exports: [],
 })
 export class UsersModule { }

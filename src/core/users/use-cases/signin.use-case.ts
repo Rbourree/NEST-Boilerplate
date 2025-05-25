@@ -3,6 +3,13 @@ import { User } from "../user.entity";
 import { IBcryptService } from "../../shared/bcrypt.interface";
 import { IJWTService } from "../../shared/jwt.interface";
 
+
+export interface SignInResponse {
+  user: User;
+  accessToken: string;
+  refreshToken: string;
+}
+
 export class SignInUseCase {
     constructor(
         private readonly userRepository: UserRepository,
@@ -17,7 +24,8 @@ export class SignInUseCase {
       * @returns The authenticated user.
       * @throws Error if the credentials are invalid.
     */
-    async execute(email: string, password: string): Promise<User & { access: string; refresh: string }> {
+    async execute(email: string, password: string): Promise<SignInResponse> {
+
         const user = await this.userRepository.findByEmail(email);
         
         if (!user || !(await this.bcryptService.compare(password, user.password))) {
@@ -25,11 +33,13 @@ export class SignInUseCase {
         }
 
         // Generate access and refresh tokens for the new user
-        const payload = { id_user: user.id_user };
-        const access = await this.jwtService.createAccessToken(payload);
-        const refresh = await this.jwtService.createRefreshToken(payload);
-        const refreshHash = await this.bcryptService.hash(refresh);
-        await this.userRepository.updateRefreshToken(user.id_user, refreshHash);
-        return Object.assign(user, { access, refresh });
+        const payload = { id_user: user.id_user.getValue() };
+        const accessToken = await this.jwtService.createAccessToken(payload);
+        const refreshToken = await this.jwtService.createRefreshToken(payload);
+        const refreshHash = await this.bcryptService.hash(refreshToken);
+
+        await this.userRepository.updateRefreshToken(user.id_user.getValue(), refreshHash);
+
+        return { user, accessToken, refreshToken };
     }
 }

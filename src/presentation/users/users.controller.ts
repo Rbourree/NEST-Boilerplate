@@ -1,4 +1,4 @@
-import { Controller, Get, Headers, UseGuards, HttpStatus, HttpException, Param, Patch, Delete } from '@nestjs/common';
+import { Controller, Get, Headers, UseGuards, HttpStatus, HttpException, Param, Patch, Delete, Body } from '@nestjs/common';
 import { JwtAuthGuard } from '../../common/auth.guard';
 
 import { 
@@ -47,11 +47,11 @@ export class UsersController {
 
     @Patch('/user/:id_user')
     @UseGuards(JwtAuthGuard)
-    async updateUser(@Param('id_user') id_user: string, @Headers('user') currentUser: any) {
+    async updateUser(@Param('id_user') id_user: string, @Body() payload: any, @Headers('user') currentUser: any) {
         if (id_user !== currentUser.id_user) {
             throw new HttpException('You can only update your own user', HttpStatus.FORBIDDEN);
         }
-        const updatedUser = await this.updateUserUseCase.execute(id_user, currentUser);
+        const updatedUser = await this.updateUserUseCase.execute(id_user, payload);
         if (!updatedUser) {
             throw new HttpException('User not found or update failed', HttpStatus.NOT_FOUND);
         }

@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserRepository } from '../../core/users/user.repository';
 import { User } from '../../core/users/user.entity';
-
+import { UserMapper } from "../mapper/user.mapper";
 @Injectable()
 export class UsersRepositoryPrisma implements UserRepository {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService, @Inject('UserMapper') private readonly userMapper: UserMapper) { }
 
     async create(email: string, password: string): Promise<User> {
         const user = await this.prisma.user.create({
@@ -13,54 +13,45 @@ export class UsersRepositoryPrisma implements UserRepository {
                 email,
                 password,
             },
-            omit: {
-                password: true,
-                refreshToken: true,
-            },
+
         }).catch((error) => {
             throw new Error(`Failed to create user: ${error.message}`);
         });
-        return new User(user);
+        return UserMapper.toUser(user);
     }
 
     async findById(id_user: string): Promise<User | null> {
         const user = await this.prisma.user.findUnique({
             where: { id_user },
-            omit: {
-                password: true,
-                refreshToken: true,
-            },
         });
-        return user ? new User(user) : null;
+        if (!user) return null;   
+        let theUser = UserMapper.toUser(user);
+        return theUser
     }
 
     async findByEmail(email: string): Promise<User | null> {
         const user = await this.prisma.user.findUnique({
-            where: { email },
-            omit: {
-                refreshToken: true,
-            },
+            where: { email }
         });
-        return user ? new User(user) : null;
+        if (!user) return null;  
+        const toto = UserMapper.toUser(user);        
+        return toto;
     }
 
     async update(id_user: string, user: User): Promise<User> {
+        
+        const data = UserMapper.toPersistence(user)
+        
         const updatedUser = await this.prisma.user.update({
             where: { id_user: id_user },
-            data: {
-                email: user.email,
-                password: user.password,
-            },
-            omit: {
-                password: true,
-                refreshToken: true,
-            },
+            data: data,
+
         }).catch((error) => {
             throw new Error(`Failed to update user: ${error.message}`);
         });
         if (!updatedUser) throw new Error(`User with id ${id_user} not found`);
-
-        return new User(updatedUser);
+        
+        return UserMapper.toUser(updatedUser);
     }
 
     async updateRefreshToken(id_user: string, refreshToken: string): Promise<User> {
@@ -68,15 +59,11 @@ export class UsersRepositoryPrisma implements UserRepository {
             where: { id_user },
             data: {
                 refreshToken,
-            },
-            omit: {
-                password: true,
-                refreshToken: true,
-            },
+            }
         }).catch((error) => {
             throw new Error(`Failed to update refresh token: ${error.message}`);
         });
-        return new User(updatedUser);
+        return UserMapper.toUser(updatedUser);
     }
 
     async delete(id_user: string): Promise<void> {
@@ -87,7 +74,7 @@ export class UsersRepositoryPrisma implements UserRepository {
 
     async findAll(): Promise<User[]> {
         const users = await this.prisma.user.findMany();
-        return users.map((user) => new User(user));
+        return users.map((user) => UserMapper.toUser(user));
     }
 
 }

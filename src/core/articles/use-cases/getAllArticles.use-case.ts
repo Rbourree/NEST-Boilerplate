@@ -5,8 +5,8 @@ export class GetAllArticlesUseCase {
   constructor(private readonly articleRepository: ArticleRepository) {}
 
   /**
-   * Exécute le cas d'utilisation pour récupérer tous les articles.
-   * @returns Un tableau d'articles ou un tableau vide s'il n'y en a pas.
+   * Executes the use case to retrieve all articles.
+   * @returns An array of articles or an empty array if none exist.
    */
   async execute(): Promise<Article[]> {
     const articles = await this.articleRepository.findAll();

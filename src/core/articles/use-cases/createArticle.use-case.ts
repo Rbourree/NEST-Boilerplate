@@ -5,9 +5,9 @@ export class CreateArticleUseCase {
   constructor(private readonly articleRepository: ArticleRepository) {}
 
   /**
-   * Exécute le cas d'utilisation pour créer un nouvel article.
-   * @param articleData - Les données de l'article à créer.
-   * @returns L'article créé ou null en cas d'échec.
+   * Executes the use case to create a new article.
+   * @param articleData - The data of the article to be created.
+   * @returns The created article or null in case of failure.
    */
   async execute(articleData: Article): Promise<Article | null> {
     const article = await this.articleRepository.create(articleData);

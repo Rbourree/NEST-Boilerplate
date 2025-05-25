@@ -3,6 +3,12 @@ import { User } from "../user.entity";
 import { IBcryptService } from "../../shared/bcrypt.interface";
 import { IJWTService } from "../../shared/jwt.interface";
 
+export interface SignUpResponse {
+  user: User;
+  accessToken: string;
+  refreshToken: string;
+}
+
 export class SignUpUseCase {
     constructor(
         private readonly userRepository: UserRepository,
@@ -17,7 +23,7 @@ export class SignUpUseCase {
      * @returns The newly created user.
      * @throws Error if the user already exists or if the data is invalid.
      */
-    async execute(email: string, password: string): Promise<User & { access: string; refresh: string }> {
+    async execute(email: string, password: string): Promise<SignUpResponse> {
         const existingUser = await this.userRepository.findByEmail(email);
         if (existingUser) {
             throw new Error('User already exists with this email');
@@ -28,11 +34,12 @@ export class SignUpUseCase {
             throw new Error('Failed to create user');
         }
         // Generate access and refresh tokens for the new user
-        const payload = { id_user: createdUser.id_user };
-        const access = await this.jwtService.createAccessToken(payload);
-        const refresh = await this.jwtService.createRefreshToken(payload);
-        const refreshHash = await this.bcryptService.hash(refresh);
-        await this.userRepository.updateRefreshToken(createdUser.id_user, refreshHash);
-        return Object.assign(new User(createdUser), { access, refresh });
+        const payload = { id_user: createdUser.id_user.getValue() };
+        const accessToken = await this.jwtService.createAccessToken(payload);
+        const refreshToken = await this.jwtService.createRefreshToken(payload);
+        const refreshHash = await this.bcryptService.hash(refreshToken);
+        await this.userRepository.updateRefreshToken(createdUser.id_user.getValue(), refreshHash);
+
+        return { user: createdUser, accessToken, refreshToken };
     }
 }

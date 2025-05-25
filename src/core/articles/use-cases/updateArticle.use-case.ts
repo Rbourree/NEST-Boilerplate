@@ -5,10 +5,10 @@ export class UpdateArticleUseCase {
   constructor(private readonly articleRepository: ArticleRepository) {}
 
   /**
-   * Exécute le cas d'utilisation pour mettre à jour un article existant.
-   * @param id_article - L'ID de l'article à mettre à jour.
-   * @param articleData - Les nouvelles données de l'article.
-   * @returns L'article mis à jour ou null en cas d'échec.
+   * Executes the use case to update an existing article.
+   * @param id_article - The ID of the article to update.
+   * @param articleData - The new data for the article.
+   * @returns The updated article or null in case of failure.
    */
   async execute(id_article: string, articleData: Partial<Article>): Promise<Article | null> {
     const article = await this.articleRepository.findById(id_article);

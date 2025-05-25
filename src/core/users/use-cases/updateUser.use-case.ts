@@ -5,16 +5,18 @@ export class UpdateUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
   /**
-   * Exécute le cas d'utilisation pour récupérer un utilisateur par son ID.
-   * @param id_user - L'ID de l'utilisateur à récupérer.
-   * @returns L'utilisateur correspondant ou null s'il n'existe pas.
+   * Executes the use case to retrieve a user by their ID.
+   * @param id_user - The ID of the user to retrieve.
+   * @returns The corresponding user or null if it does not exist.
    */
-  async execute(id_user: string, userData: Partial<User>): Promise<User | null> {
+  async execute(id_user: string, userData: User): Promise<User | null> {
     const user = await this.userRepository.findById(id_user);
+    
     if (!user) {
       throw new Error(`User with ID ${id_user} not found`);
     }
     user.update(userData);
+
     const updatedUser = await this.userRepository.update(id_user, user);
     return updatedUser;
   }

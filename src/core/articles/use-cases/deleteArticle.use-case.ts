@@ -5,9 +5,9 @@ export class DeleteArticleUseCase {
   constructor(private readonly articleRepository: ArticleRepository) {}
 
   /**
-   * Exécute le cas d'utilisation pour supprimer un article existant.
-   * @param id_article - L'ID de l'article à supprimer.
-   * @returns L'article supprimé ou null en cas d'échec.
+   * Executes the use case to delete an existing article.
+   * @param id_article - The ID of the article to delete.
+   * @returns The deleted article or null in case of failure.
    */
   async execute(id_article: string): Promise<Article | null> {
     const article = await this.articleRepository.findById(id_article);

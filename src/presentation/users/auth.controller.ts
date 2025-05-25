@@ -16,8 +16,9 @@ export class AuthController {
             if (!user) {
                 throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
             }
-            return user;
-        } catch (error) {           
+
+            return user; // Assuming user.getValue() returns the user object with tokens
+        } catch (error) {
             throw new HttpException(error.message || 'Sign-in failed', HttpStatus.UNAUTHORIZED);
         }
     }

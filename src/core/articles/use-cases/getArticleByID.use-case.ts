@@ -5,9 +5,9 @@ export class GetArticleByIDUseCase {
   constructor(private readonly articleRepository: ArticleRepository) {}
 
   /**
-   * Exécute le cas d'utilisation pour récupérer un article par son ID.
-   * @param id_article - L'ID de l'article à récupérer.
-   * @returns L'article correspondant ou null s'il n'existe pas.
+   * Executes the use case to retrieve an article by its ID.
+   * @param id_article - The ID of the article to retrieve.
+   * @returns The corresponding article or null if it does not exist.
    */
   async execute(id_article: string): Promise<Article | null> {
     const article = await this.articleRepository.findById(id_article);
