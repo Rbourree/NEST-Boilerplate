@@ -342,4 +342,6 @@ export class User {
             phone: this.phone ? this.phone.getValue() : null,
         };
     }
+
+    
 }
