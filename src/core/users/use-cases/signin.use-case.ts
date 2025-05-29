@@ -4,12 +4,10 @@ import { User } from "../user.entity";
 import { IBcryptService } from "../../shared/bcrypt.service";
 import { IJWTService } from "../../shared/jwt.service";
 
-
-export interface SignInResponse {
-  user: User;
+type UserWithTokens = ReturnType<User['toJSON']> & {
   accessToken: string;
   refreshToken: string;
-}
+};
 
 export class SignInUseCase {
     constructor(
@@ -25,7 +23,7 @@ export class SignInUseCase {
       * @returns The authenticated user.
       * @throws Error if the credentials are invalid.
     */
-    async execute(email: string, password: string): Promise<SignInResponse> {
+    async execute(email: string, password: string): Promise<UserWithTokens> {
 
         const user = await this.userRepository.findByEmail(email);
         
@@ -40,7 +38,7 @@ export class SignInUseCase {
         const refreshHash = await this.bcryptService.hash(refreshToken);
 
         await this.userRepository.updateRefreshToken(user.id_user, refreshHash);
-                
-        return { user, accessToken, refreshToken };
+
+        return { ...user.toJSON(), accessToken, refreshToken };
     }
 }

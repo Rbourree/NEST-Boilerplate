@@ -4,11 +4,10 @@ import { User } from "../user.entity";
 import { IBcryptService } from "../../shared/bcrypt.service";
 import { IJWTService } from "../../shared/jwt.service";
 
-export interface SignUpResponse {
-  user: User;
+type UserWithTokens = ReturnType<User['toJSON']> & {
   accessToken: string;
   refreshToken: string;
-}
+};
 
 export class SignUpUseCase {
     constructor(
@@ -24,7 +23,7 @@ export class SignUpUseCase {
      * @returns The newly created user.
      * @throws Error if the user already exists or if the data is invalid.
      */
-    async execute(email: string, password: string): Promise<SignUpResponse> {
+    async execute(email: string, password: string): Promise<UserWithTokens> {
         const existingUser = await this.userRepository.findByEmail(email);
         if (existingUser) {
             throw new Error('User already exists with this email');
@@ -41,6 +40,6 @@ export class SignUpUseCase {
         const refreshHash = await this.bcryptService.hash(refreshToken);
         await this.userRepository.updateRefreshToken(createdUser.id_user, refreshHash);
 
-        return { user: createdUser, accessToken, refreshToken };
+        return { ...createdUser.toJSON(), accessToken, refreshToken };
     }
 }

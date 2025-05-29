@@ -1,6 +1,6 @@
 import { Controller, Get, Headers, UseGuards, HttpStatus, HttpException, Param, Patch, Delete, Body } from '@nestjs/common';
 import { JwtAuthGuard } from '@common/auth.guard';
-
+import { UserDto } from './dtos/user.dto';
 import { 
     GetMeUseCase, 
     GetUserByIDUseCase, 
@@ -21,7 +21,7 @@ export class UsersController {
 
     @Get('/user/me')
     @UseGuards(JwtAuthGuard)
-    async getMe(@Headers('user') currentUser: any) {
+    async getMe(@Headers('user') currentUser: UserDto) {
         const user = await this.getMeUseCase.execute(currentUser.id_user);
         if (!user) {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -31,7 +31,7 @@ export class UsersController {
 
     @Get('/user/:id_user')
     @UseGuards(JwtAuthGuard)
-    async getByID(@Param('id_user') id_user: string) {
+    async getByID(@Param('id_user') id_user: string): Promise<UserDto> {
         const user = await this.getUserByIDUseCase.execute(id_user);
         if (!user) {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -41,13 +41,13 @@ export class UsersController {
 
     @Get('/users')
     @UseGuards(JwtAuthGuard)
-    async getAll() {
+    async getAll(): Promise<UserDto[]> {
         return await this.getAllUsersUseCase.execute();
     }
 
     @Patch('/user/:id_user')
     @UseGuards(JwtAuthGuard)
-    async updateUser(@Param('id_user') id_user: string, @Body() payload: any, @Headers('user') currentUser: any) {
+    async updateUser(@Param('id_user') id_user: string, @Body() payload: any, @Headers('user') currentUser: UserDto) {
         if (id_user !== currentUser.id_user) {
             throw new HttpException('You can only update your own user', HttpStatus.FORBIDDEN);
         }
@@ -60,11 +60,11 @@ export class UsersController {
 
     @Delete('/user/:id_user')
     @UseGuards(JwtAuthGuard)
-    async deleteUser(@Param('id_user') id_user: string, @Headers('user') currentUser: any) {
+    async deleteUser(@Param('id_user') id_user: string, @Headers('user') currentUser: UserDto) {
         if (id_user !== currentUser.id_user) {
             throw new HttpException('You can only delete your own user', HttpStatus.FORBIDDEN);
         }
-        let user =await this.deleteUserUseCase.execute(id_user);
+        let user = await this.deleteUserUseCase.execute(id_user);
         if (!user) {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }
