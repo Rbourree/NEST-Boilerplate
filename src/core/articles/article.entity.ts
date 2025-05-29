@@ -1,12 +1,18 @@
-import { z } from "zod";
+import { z, ZodType } from "zod";
+import { User } from "../users/user.entity";
+
+const UserInstanceSchema: ZodType<User> = z.custom<User>(
+  (val) => val instanceof User,
+  { message: 'author must be a User instance' },
+);
 
 const ArticleProps = z.object({
     id_article: z.string().uuid(),
     title: z.string().min(2).max(100),
     content: z.string().min(10).max(5000),
-    id_user: z.string().uuid(),
+    author: UserInstanceSchema, 
     createdAt: z.date(),
-    updatedAt: z.date()
+    updatedAt: z.date(),
 })
 type ArticleProps = z.infer<typeof ArticleProps>;
 
@@ -18,7 +24,7 @@ type ArticleProps = z.infer<typeof ArticleProps>;
  * @property {string} id_article - The unique identifier of the article.
  * @property {string} title - The title of the article.
  * @property {string} content - The content of the article.
- * @property {string} id_user - The identifier of the user who created the article.
+ * @property {User} author - The author of the article.
  * @property {Date} createdAt - The date when the article was created.
  * @property {Date} updatedAt - The date when the article was last updated.
  */
@@ -26,7 +32,7 @@ export class Article {
     private readonly _id_article: string;
     private _title: string;
     private _content: string;
-    private readonly _id_user: string;
+    private readonly _author: User;
     private _createdAt: Date;
     private _updatedAt: Date;
 
@@ -34,7 +40,7 @@ export class Article {
         this._id_article = props.id_article;
         this._title = props.title;
         this._content = props.content;
-        this._id_user = props.id_user;
+        this._author = props.author;
         this._createdAt = props.createdAt;
         this._updatedAt = props.updatedAt;
     }
@@ -70,8 +76,8 @@ export class Article {
         return this._content;
     }
 
-    get id_user(): string {
-        return this._id_user;
+    get author(): User {
+        return this._author;
     }
 
     get createdAt(): Date {
@@ -87,9 +93,9 @@ export class Article {
             id_article: this._id_article,
             title: this._title,
             content: this._content,
-            id_user: this._id_user,
+            author: this._author,
             createdAt: this._createdAt,
-            updatedAt: this._updatedAt
+            updatedAt: this._updatedAt,
         };
     }
 }
