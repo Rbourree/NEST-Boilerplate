@@ -20,7 +20,7 @@ A robust, modular, and scalable NestJS boilerplate following Clean Architecture 
 src/
   common/         # Shared services, guards, filters
   core/           # Domain entities, value objects, use cases, interfaces
-  infrastructure/ # Repositories, mappers, external services
+  infrastructure/ # Repositories, external services
   presentation/   # Controllers, modules, DTOs
 ```
 

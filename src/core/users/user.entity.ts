@@ -40,15 +40,15 @@ export class User {
     private readonly _id_user: string
     private readonly _email: string
     private readonly _password: string
-    private  _firstname: string | null
-    private  _lastname: string | null
-    private  _address: string | null
-    private  _city: string | null
-    private  _state: string | null
-    private  _country: string | null
-    private  _zipCode: string | null
-    private  _dateOfBirth: Date | null
-    private  _phone: string | null
+    private _firstname: string | null
+    private _lastname: string | null
+    private _address: string | null
+    private _city: string | null
+    private _state: string | null
+    private _country: string | null
+    private _zipCode: string | null
+    private _dateOfBirth: Date | null
+    private _phone: string | null
 
     private constructor(props: UserProps) {
         this._id_user = props.id_user;
@@ -72,9 +72,17 @@ export class User {
      * @description Creates a new User instance with the provided properties.
      */
     static create(props: UserProps) {
-        return new User(props);
+        try {
+            UserProps.parse(props);
+            return new User(props);
+        } catch (error) {
+            if (error instanceof z.ZodError) {                
+                throw new Error(`Validation error: ${error.errors.map(e => e.message).join(', ')}`);
+            }
+            throw error;
+        }
     }
-    
+
     get id_user(): string {
         return this._id_user;
     }

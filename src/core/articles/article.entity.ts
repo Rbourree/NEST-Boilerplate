@@ -48,7 +48,15 @@ export class Article {
      * @description Creates a new Article instance with the provided properties.
      */
     static create(props: ArticleProps) {
-        return new Article(props);
+        try {
+            ArticleProps.parse(props);
+            return new Article(props);
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                throw new Error(`Validation error: ${error.errors.map(e => e.message).join(', ')}`);
+            }
+            throw error;
+        }
     }
 
     get id_article(): string {
@@ -66,11 +74,11 @@ export class Article {
     get id_user(): string {
         return this._id_user;
     }
-    
+
     get createdAt(): Date {
         return this._createdAt;
     }
-    
+
     get updatedAt(): Date {
         return this._updatedAt;
     }
