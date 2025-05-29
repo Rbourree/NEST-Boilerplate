@@ -6,9 +6,9 @@ export class DeleteUserUseCase {
   constructor(@Inject('UserRepository') private readonly userRepository: UserRepository) {}
 
   /**
-   * Exécute le cas d'utilisation pour supprimer un utilisateur par son ID.
-   * @param id_user - L'ID de l'utilisateur à supprimer.
-   * @returns L'utilisateur supprimé ou null s'il n'existe pas.
+   * Executes the use case to delete a user by their ID.
+   * @param id_user - The ID of the user to delete.
+   * @returns The deleted user or null if not found.
    */
   async execute(id_user: string): Promise<User | null> {
     const user = await this.userRepository.findById(id_user);
