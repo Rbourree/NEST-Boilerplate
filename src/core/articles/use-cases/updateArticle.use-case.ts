@@ -1,8 +1,9 @@
+import { Inject } from "@nestjs/common";
 import { ArticleRepository } from '../article.repository';
 import { Article } from '../article.entity';
 
 export class UpdateArticleUseCase {
-  constructor(private readonly articleRepository: ArticleRepository) {}
+  constructor(@Inject('ArticleRepository') private readonly articleRepository: ArticleRepository) {}
 
   /**
    * Executes the use case to update an existing article.
@@ -16,8 +17,7 @@ export class UpdateArticleUseCase {
       throw new Error(`Article with ID ${id_article} not found`);
     }
 
-    article.update(articleData);
-    const updatedArticle = await this.articleRepository.update(id_article, article);
+    const updatedArticle = await this.articleRepository.update(id_article, articleData);
     if (!updatedArticle) {
       throw new Error(`Failed to update article with ID ${id_article}`);
     }

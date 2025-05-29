@@ -1,347 +1,135 @@
-import { UUID, Email, ZipCode, Phone } from "./value-objects";
+import { z } from "zod";
 
-interface UserProps {
-    id_user: UUID;
-    email: Email;
-    password: string;
-    firstname?: string | null;
-    lastname?: string | null;
-    address?: string | null;
-    city?: string | null;
-    state?: string | null;
-    country?: string | null;
-    zipCode?: ZipCode | null;
-    dateOfBirth?: Date | null;
-    phone?: Phone | null;
-}
+const UserProps = z.object({
+    id_user: z.string().uuid(),
+    email: z.string().email(),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    firstname: z.string().optional().nullable(),
+    lastname: z.string().optional().nullable(),
+    address: z.string().optional().nullable(),
+    city: z.string().optional().nullable(),
+    state: z.string().optional().nullable(),
+    country: z.string().optional().nullable(),
+    zipCode: z.string().optional().nullable(),
+    dateOfBirth: z.date().optional().nullable(),
+    phone: z.string().optional().nullable(),
+})
+type UserProps = z.infer<typeof UserProps>;
 
 /**
  * User entity representing a user in the system.
  * @class User
  * @description This class encapsulates the properties and behaviors of a user.
  * It includes methods for creating, updating, and retrieving user information.
- * @property {UUID} id_user - The unique identifier of the user.
- * @property {Email} email - The email of the user.
- * @property {string} password - The password of the user.
- * @property {string} [firstname] - The first name of the user.
- * @property {string} [lastname] - The last name of the user.
- * @property {string} [address] - The address of the user.
- * @property {string} [city] - The city of the user.
- * @property {string} [state] - The state of the user.
- * @property {string} [country] - The country of the user.
- * @property {ZipCode} [zipCode] - The postal code of the user.
- * @property {Date} [dateOfBirth] - The date of birth of the user.
- * @property {Phone} [phone] - The phone number of the user.
- * @throws {Error} If required properties are missing during creation.
- * @throws {Error} If any property is invalid during updates.
- * @example
- * const user = User.create(
- *   UUID.create('123e4567-e89b-12d3-a456-426614174000'),
- *   Email.create('john.doe@example.com'),
- *   'password123',
- *   'John',
- *   'Doe',
- *   '123 Main St',
- *   'Anytown',
- *   'CA',
- *   'USA',
- *   ZipCode.create('12345'),
- *   new Date('1990-01-01'),
- *   Phone.create('555-1234')
- * );
- */
+ * @property {string} id_user - The unique identifier of the user.
+ * @property {string} email - The user's email address.
+ * @property {string} password - The user's password.
+ * @property {string | null} firstname - The user's first name.
+ * @property {string | null} lastname - The user's last name.
+ * @property {string | null} address - The user's address.
+ * @property {string | null} city - The user's city.
+ * @property {string | null} state - The user's state.
+ * @property {string | null} country - The user's country.
+ * @property {string | null} zipCode - The user's zip code.
+ * @property {Date | null} dateOfBirth - The user's date of birth.
+ * @property {string | null} phone - The user's phone number.
+ * @description The User class represents a user in the system with various properties such as email, password, name, address, and contact information.
+ * It provides methods to create a new user instance and retrieve user information in JSON format.
+*/
 export class User {
-    private props: UserProps;
+    private readonly _id_user: string
+    private readonly _email: string
+    private readonly _password: string
+    private  _firstname: string | null
+    private  _lastname: string | null
+    private  _address: string | null
+    private  _city: string | null
+    private  _state: string | null
+    private  _country: string | null
+    private  _zipCode: string | null
+    private  _dateOfBirth: Date | null
+    private  _phone: string | null
 
-    /**
-     * Private constructor to enforce the use of the static create method.
-     * @param {UserProps} props - The properties of the user.
-     * @description Initializes a new User instance with the provided properties.
-     */
     private constructor(props: UserProps) {
-        this.props = props;
+        this._id_user = props.id_user;
+        this._email = props.email;
+        this._password = props.password;
+        this._firstname = props.firstname || null;
+        this._lastname = props.lastname || null;
+        this._address = props.address || null;
+        this._city = props.city || null;
+        this._state = props.state || null;
+        this._country = props.country || null;
+        this._zipCode = props.zipCode || null;
+        this._dateOfBirth = props.dateOfBirth || null;
+        this._phone = props.phone || null;
+
     }
     /**
      * Create a new User instance.
      * @param {UserProps} props - The properties of the user.
      * @returns {User} A new User instance.
-     * @throws {Error} If required properties are missing.
      * @description Creates a new User instance with the provided properties.
      */
-    static create(
-        id_user: UUID,
-        email: Email,
-        password: string,
-        firstname?: string | null,
-        lastname?: string | null,
-        address?: string | null,
-        city?: string | null,
-        state?: string | null,
-        country?: string | null,
-        zipCode?: ZipCode | null,
-        dateOfBirth?: Date | null,
-        phone?: Phone | null
-    ): User {
-        if (!id_user || !email || !password) {
-            throw new Error('id_user, email, and password are required to create a User');
-        }
-        return new User({
-            id_user,
-            email,
-            password,
-            firstname: firstname || null,
-            lastname: lastname || null,
-            address: address || null,
-            city: city || null,
-            state: state || null,
-            country: country || null,
-            zipCode: zipCode || null,
-            dateOfBirth: dateOfBirth || null,
-            phone: phone || null
-        });
+    static create(props: UserProps) {
+        return new User(props);
     }
-
-    /**
-     * Get the properties of the user.
-     * @returns {UserProps} The properties of the user.
-     * @description Returns the properties of the user.
-     */
-    get data(): UserProps {
-        return this.props;
-    }
-
     
-    /**
-     * Get id_user
-     * @returns {UUID} The unique identifier of the user.
-     * @description Returns the unique identifier of the user.
-     */
-    get id_user(): UUID {
-        return this.props.id_user;
+    get id_user(): string {
+        return this._id_user;
     }
 
-    /**
-     * Get email
-     * @returns {Email} The email of the user.
-     * @description Returns the email of the user.
-     */
-    get email(): Email {
-        return this.props.email;
+    get email(): string {
+        return this._email;
     }
 
-    /**
-     * Get password
-     * @returns {string} The password of the user.
-     * @description Returns the password of the user.
-     */
     get password(): string {
-        return this.props.password;
+        return this._password;
     }
 
-    
     get firstname(): string | null {
-        return this.props.firstname || null;
+        return this._firstname;
     }
     get lastname(): string | null {
-        return this.props.lastname || null;
+        return this._lastname;
     }
     get address(): string | null {
-        return this.props.address || null;
+        return this._address;
     }
 
     get city(): string | null {
-        return this.props.city || null;
+        return this._city;
     }
     get state(): string | null {
-        return this.props.state || null;
+        return this._state;
     }
     get country(): string | null {
-        return this.props.country || null;
+        return this._country;
     }
-    get zipCode(): ZipCode | null {
-        return this.props.zipCode || null;
+    get zipCode(): string | null {
+        return this._zipCode;
     }
     get dateOfBirth(): Date | null {
-        return this.props.dateOfBirth || null;
+        return this._dateOfBirth;
     }
-    get phone(): Phone | null {
-        return this.props.phone || null;
-    }
-
-    /**
-     * @param {string} newFirstname - The new first name of the user.
-     * @throws {Error} If the new first name is empty.
-     * @description Updates the firstname of the user.
-     * @returns {void}
-     */
-    updateFirstname(newFirstname: string): void {
-        if (!newFirstname.trim()) {
-            throw new Error('Name cannot be empty');
-        }
-        this.props.firstname = newFirstname;
+    get phone(): string | null {
+        return this._phone;
     }
 
-    /**
-     * @param {string} newLastname - The new last name of the user.
-     * @throws {Error} If the new last name is empty.
-     * @description Updates the lastname of the user.
-     * @returns {void}
-     */
-    updateLastname(newLastname: string): void {
-        if (!newLastname.trim()) {
-            throw new Error('Name cannot be empty');
-        }
-        this.props.lastname = newLastname;
-    }
-
-    /**
-     * @param {string} newEmail - The new email of the user.
-     * @throws {Error} If the new email is invalid.
-     * @description Updates the email of the user.
-     * @returns {void}
-     */
-    updateEmail(newEmail: Email): void {
-        this.props.email = newEmail;
-
-    }
-
-    /**
-     * @param {string} newPassword - The new password of the user.
-     * @throws {Error} If the new password is empty.
-     * @description Updates the password of the user.
-     * @returns {void}
-     */
-    updatePassword(newPassword: string): void {
-        this.props.password = newPassword;
-    }
-
-    /**
-     * @param {string} newAddress - The new address of the user.
-     * @throws {Error} If the new address is empty.
-     * @description Updates the address of the user.
-     * @returns {void}
-     */
-    updateAddress(newAddress: string): void {
-        if (!newAddress.trim()) {
-            throw new Error('Address cannot be empty');
-        }
-        this.props.address = newAddress;
-    }
-
-    /**
-     * @param {string} newCity - The new city of the user.
-     * @throws {Error} If the new city is empty.
-     * @description Updates the city of the user.
-     * @returns {void}
-     */
-    updateCity(newCity: string): void {
-        if (!newCity.trim()) {
-            throw new Error('City cannot be empty');
-        }
-        this.props.city = newCity;
-    }
-
-    /**
-     * @param {string} newState - The new state of the user.
-     * @throws {Error} If the new state is empty.
-     * @description Updates the state of the user.
-     * @returns {void}
-     */
-    updateState(newState: string): void {
-        if (!newState.trim()) {
-            throw new Error('State cannot be empty');
-        }
-        this.props.state = newState;
-    }
-
-    /**
-     * @param {string} newCountry - The new country of the user.
-     * @throws {Error} If the new country is empty.
-     * @description Updates the country of the user.
-     * @returns {void}
-     */
-    updateCountry(newCountry: string): void {
-        if (!newCountry.trim()) {
-            throw new Error('Country cannot be empty');
-        }
-        this.props.country = newCountry;
-    }
-
-    /**
-     * @param {string} newPostalCode - The new postal code of the user.
-     * @throws {Error} If the new postal code is invalid.
-     * @description Updates the postal code of the user.
-     * @returns {void}
-     */
-    updateZipCode(newZipCode: string | ZipCode | null | undefined): void {
-        if (!newZipCode) {
-            this.props.zipCode = null;
-            return;
-        }
-        if (typeof newZipCode === 'string') {
-            this.props.zipCode = ZipCode.create(newZipCode);
-        } else {
-            this.props.zipCode = newZipCode;
-        }
-    }
-
-    /**
-     * @param {Date} newDateOfBirth - The new date of birth of the user.
-     * @throws {Error} If the new date of birth is empty.
-     * @description Updates the date of birth of the user.
-     * @returns {void}
-     */
-    updateDateOfBirth(newDateOfBirth: Date): void {
-        if (!newDateOfBirth) {
-            throw new Error('Date of birth cannot be empty');
-        }
-        this.props.dateOfBirth = newDateOfBirth;
-    }
-
-    /**
-     * @param {string} newPhone - The new phone number of the user.
-     * @throws {Error} If the new phone number is invalid.
-     * @description Updates the phone number of the user.
-     * @returns {void}
-     */
-    updatePhone(newPhone: Phone): void {
-        this.props.phone = newPhone;
-    }
-
-    /**
-     * @param {Partial<User>} data - The data to update the user with.
-     * @description Updates the user with the provided data.
-     * @returns {void}
-     */
-    update(data: User): void {
-        if (data.props.firstname) this.updateFirstname(data.props.firstname);
-        if (data.props.lastname) this.updateLastname(data.props.lastname);
-        if (data.props.email) this.updateEmail(data.props.email);
-        if (data.props.address) this.updateAddress(data.props.address);
-        if (data.props.city) this.updateCity(data.props.city);
-        if (data.props.state) this.updateState(data.props.state);
-        if (data.props.country) this.updateCountry(data.props.country);
-        if (data.props.zipCode) this.updateZipCode(data.props.zipCode);
-        if (data.props.dateOfBirth) this.updateDateOfBirth(data.props.dateOfBirth);
-        if (data.props.phone) this.updatePhone(data.props.phone);
-    }
-    
-    toJSON() {
+    toJSON(): UserProps {
         return {
-            id_user: this.id_user.getValue(),
-            email: this.email.getValue(),
-            password: this.password,
-            firstname: this.firstname,
-            lastname: this.lastname,
-            address: this.address,
-            city: this.city,
-            state: this.state,
-            country: this.country,
-            zipCode: this.zipCode ? this.zipCode.getValue() : null,
-            dateOfBirth: this.dateOfBirth,
-            phone: this.phone ? this.phone.getValue() : null,
+            id_user: this._id_user,
+            email: this._email,
+            password: this._password,
+            firstname: this._firstname,
+            lastname: this._lastname,
+            address: this._address,
+            city: this._city,
+            state: this._state,
+            country: this._country,
+            zipCode: this._zipCode,
+            dateOfBirth: this._dateOfBirth,
+            phone: this._phone
         };
     }
-
-    
 }

@@ -1,8 +1,9 @@
+import { Inject } from '@nestjs/common';
 import { UserRepository } from '../user.repository';
 import { User } from '../user.entity';
 
 export class DeleteUserUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(@Inject('UserRepository') private readonly userRepository: UserRepository) {}
 
   /**
    * Exécute le cas d'utilisation pour supprimer un utilisateur par son ID.

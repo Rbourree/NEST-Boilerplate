@@ -15,19 +15,19 @@ export class ArticlesRepositoryPrisma implements ArticleRepository {
                 id_user: article.id_user,
             },
         });
-        return new Article(createdArticle);
+        return Article.create(createdArticle);
     }
 
     async findById(id_article: string): Promise<Article | null> {
         const article = await this.prisma.article.findUnique({
             where: { id_article },
         });
-        return article ? new Article(article) : null;
+        return article ? Article.create(article) : null;
     }
 
     async findAll(): Promise<Article[]> {
         const articles = await this.prisma.article.findMany();
-        return articles.map((article) => new Article(article));
+        return articles.map((article) => Article.create(article));
     }
 
     async delete(id_article: string): Promise<void> {
@@ -44,7 +44,7 @@ export class ArticlesRepositoryPrisma implements ArticleRepository {
                 content: article.content,
             },
         });
-        return updatedArticle ? new Article(updatedArticle) : null;
+        return updatedArticle ? Article.create(updatedArticle) : null;
     }
 
 }

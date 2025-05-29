@@ -1,56 +1,88 @@
+import { z } from "zod";
 
+const ArticleProps = z.object({
+    id_article: z.string().uuid(),
+    title: z.string().min(2).max(100),
+    content: z.string().min(10).max(5000),
+    id_user: z.string().uuid(),
+    createdAt: z.date(),
+    updatedAt: z.date()
+})
+type ArticleProps = z.infer<typeof ArticleProps>;
+
+
+/**
+ * Article entity representing an article in the system.
+ * @class Article
+ * @description This class encapsulates the properties and behaviors of an article.
+ * It includes methods for updating the title and content of the article.
+ * @property {string} id_article - The unique identifier of the article.
+ * @property {string} title - The title of the article.
+ * @property {string} content - The content of the article.
+ * @property {string} id_user - The identifier of the user who created the article.
+ * @property {Date} createdAt - The date when the article was created.
+ * @property {Date} updatedAt - The date when the article was last updated.
+ */
 export class Article {
-    public readonly id_article: string
-    public title: string
-    public content: string
-    public id_user: string
-    public createdAt: Date
-    public updatedAt: Date
+    private readonly _id_article: string;
+    private _title: string;
+    private _content: string;
+    private readonly _id_user: string;
+    private _createdAt: Date;
+    private _updatedAt: Date;
 
-    constructor(data: Partial<Article>) {
-        Object.assign(this, data);
-    }
-
-    /**
-     * @param {string} newTitle - The new title of the article.
-     * @throws {Error} If the new title is empty.
-     * @description Updates the title of the article.
-     * @returns {void}
-     */
-    updateTitle(newTitle: string): void {
-        if (!newTitle.trim()) {
-            throw new Error('Title cannot be empty');
-        }
-        this.title = newTitle;
+    private constructor(props: ArticleProps) {
+        this._id_article = props.id_article;
+        this._title = props.title;
+        this._content = props.content;
+        this._id_user = props.id_user;
+        this._createdAt = props.createdAt;
+        this._updatedAt = props.updatedAt;
     }
 
 
     /**
-     * @param {string} newContent - The new content of the article.
-     * @throws {Error} If the new content is empty.
-     * @description Updates the content of the article.
-     * @returns {void}
+     * Create a new Article instance.
+     * @param {ArticleProps} props - The properties of the article.
+     * @returns {Article} A new Article instance.
+     * @description Creates a new Article instance with the provided properties.
      */
-    updateContent(newContent: string): void {
-        if (!newContent.trim()) {
-            throw new Error('Content cannot be empty');
-        }
-        this.content = newContent;
+    static create(props: ArticleProps) {
+        return new Article(props);
     }
 
-    /**
-     * @description Updates the article with new data.
-     * @param {Partial<Article>} data - The new data to update the article with.
-     * @returns {void}
-     */
-    update(data: Partial<Article>): void {
-        if (data.title) {
-            this.updateTitle(data.title);
-        }
-        if (data.content) {
-            this.updateContent(data.content);
-        }
-        this.updatedAt = new Date();
+    get id_article(): string {
+        return this._id_article;
     }
 
+    get title(): string {
+        return this._title;
+    }
+
+    get content(): string {
+        return this._content;
+    }
+
+    get id_user(): string {
+        return this._id_user;
+    }
+    
+    get createdAt(): Date {
+        return this._createdAt;
+    }
+    
+    get updatedAt(): Date {
+        return this._updatedAt;
+    }
+
+    toJSON() {
+        return {
+            id_article: this._id_article,
+            title: this._title,
+            content: this._content,
+            id_user: this._id_user,
+            createdAt: this._createdAt,
+            updatedAt: this._updatedAt
+        };
+    }
 }

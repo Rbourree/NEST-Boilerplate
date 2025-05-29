@@ -1,7 +1,8 @@
+import { Inject } from '@nestjs/common';
 import { UserRepository } from '../user.repository';
 import { User } from "../user.entity";
-import { IBcryptService } from "../../shared/bcrypt.interface";
-import { IJWTService } from "../../shared/jwt.interface";
+import { IBcryptService } from "../../shared/bcrypt.service";
+import { IJWTService } from "../../shared/jwt.service";
 
 export interface SignUpResponse {
   user: User;
@@ -11,9 +12,9 @@ export interface SignUpResponse {
 
 export class SignUpUseCase {
     constructor(
-        private readonly userRepository: UserRepository,
-        private readonly bcryptService: IBcryptService,
-        private readonly jwtService: IJWTService
+        @Inject('UserRepository') private readonly userRepository: UserRepository,
+        @Inject('IBcryptService') private readonly bcryptService: IBcryptService,
+        @Inject('IJWTService') private readonly jwtService: IJWTService
     ) { }
 
     /**
@@ -34,11 +35,11 @@ export class SignUpUseCase {
             throw new Error('Failed to create user');
         }
         // Generate access and refresh tokens for the new user
-        const payload = { id_user: createdUser.id_user.getValue() };
+        const payload = { id_user: createdUser.id_user };
         const accessToken = await this.jwtService.createAccessToken(payload);
         const refreshToken = await this.jwtService.createRefreshToken(payload);
         const refreshHash = await this.bcryptService.hash(refreshToken);
-        await this.userRepository.updateRefreshToken(createdUser.id_user.getValue(), refreshHash);
+        await this.userRepository.updateRefreshToken(createdUser.id_user, refreshHash);
 
         return { user: createdUser, accessToken, refreshToken };
     }

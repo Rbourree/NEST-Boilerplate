@@ -5,8 +5,7 @@ import { Module } from '@nestjs/common';
 import { ArticlesController } from "./articles.controller";
 import { ArticlesRepositoryPrisma } from '../../infrastructure/repositories/articles.prisma.repository';
 
-// Core layer imports
-import { ArticleRepository } from 'src/core/articles/article.repository';
+// Use-cases
 import {
     CreateArticleUseCase,
     UpdateArticleUseCase,
@@ -26,31 +25,11 @@ import {
             provide: 'ArticleRepository',
             useClass: ArticlesRepositoryPrisma,
         },
-        {
-            provide: CreateArticleUseCase,
-            useFactory: (repo: ArticleRepository) => new CreateArticleUseCase(repo),
-            inject: ['ArticleRepository']
-        },
-        {
-            provide: UpdateArticleUseCase,
-            useFactory: (repo: ArticleRepository) => new UpdateArticleUseCase(repo),
-            inject: ['ArticleRepository']
-        },
-        {
-            provide: GetArticleByIDUseCase,
-            useFactory: (repo: ArticleRepository) => new GetArticleByIDUseCase(repo),
-            inject: ['ArticleRepository']
-        },
-        {
-            provide: GetAllArticlesUseCase,
-            useFactory: (repo: ArticleRepository) => new GetAllArticlesUseCase(repo),
-            inject: ['ArticleRepository']
-        },
-        {
-            provide: DeleteArticleUseCase,
-            useFactory: (repo: ArticleRepository) => new DeleteArticleUseCase(repo),
-            inject: ['ArticleRepository']
-        },
+        CreateArticleUseCase,
+        UpdateArticleUseCase,
+        GetArticleByIDUseCase,
+        GetAllArticlesUseCase,
+        DeleteArticleUseCase
     ],
 })
 export class ArticlesModule { }
