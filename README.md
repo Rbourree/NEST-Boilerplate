@@ -78,11 +78,6 @@ const result = await signInUseCase.execute(email, password);
 npm run test
 ```
 
-## Principles
-- **Framework-agnostic core**: No NestJS decorators in domain/use cases.
-- **Explicit mapping**: Mappers handle conversion between persistence and domain.
-- **Flat API responses**: Entities expose only primitives in API responses.
-
 ## Contributing
 Feel free to open issues or submit pull requests to improve this boilerplate!
 
