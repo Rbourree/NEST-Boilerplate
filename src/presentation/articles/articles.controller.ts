@@ -1,12 +1,12 @@
 import { Controller, Post, Get, Patch, Delete, Body, Param, HttpStatus, HttpException, UseGuards, Headers } from '@nestjs/common';
-import { JwtAuthGuard } from '../../common/auth.guard';
+import { JwtAuthGuard } from '@common/auth.guard';
 import {
     CreateArticleUseCase,
     GetAllArticlesUseCase,
     GetArticleByIDUseCase,
     UpdateArticleUseCase,
     DeleteArticleUseCase
-} from "../../core/articles/use-cases";
+} from "@core/articles/use-cases";
 
 @Controller()
 export class ArticlesController {

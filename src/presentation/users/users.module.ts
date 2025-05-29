@@ -2,13 +2,13 @@
 import { Module } from '@nestjs/common';
 
 // Common layer imports
-import { BcryptService } from '../../common/bcrypt.service';
-import { JWTService } from '../../common/jwt.service';
+import { BcryptService } from '@common/bcrypt.service';
+import { JWTService } from '@common/jwt.service';
 
 // Infrastructure layer imports
 import { UsersController } from "./users.controller";
 import { AuthController } from "./auth.controller";
-import { UsersRepositoryPrisma } from '../../infrastructure/repositories/users.prisma.repository';
+import { UsersRepositoryPrisma } from '@infrastructure/repositories/users.prisma.repository';
 
 // UseCases
 import {
@@ -19,7 +19,7 @@ import {
   UpdateUserUseCase,
   GetAllUsersUseCase,
   DeleteUserUseCase
-} from "../../core/users/use-cases";
+} from "@core/users/use-cases";
 
 
 

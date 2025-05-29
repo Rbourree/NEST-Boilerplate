@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { IJWTService } from '../core/shared/jwt.service';
+import { IJWTService } from '@core/shared/jwt.service';
 
 @Injectable()
 export class JWTService implements IJWTService {

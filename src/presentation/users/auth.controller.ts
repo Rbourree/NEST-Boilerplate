@@ -1,6 +1,6 @@
 import { Controller, Post, Body, HttpStatus, HttpException } from '@nestjs/common';
-import { SignInUseCase } from '../../core/users/use-cases/signin.use-case';
-import { SignUpUseCase } from '../../core/users/use-cases/signup.use-case';
+import { SignInUseCase } from '@core/users/use-cases/signin.use-case';
+import { SignUpUseCase } from '@core/users/use-cases/signup.use-case';
 
 import { SignInDto } from './dtos/sign-in.dto';
 import { SignUpDto } from './dtos/sign-up.dto';

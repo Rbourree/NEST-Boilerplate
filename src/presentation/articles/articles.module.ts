@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 
 // Infrastructure layer imports
 import { ArticlesController } from "./articles.controller";
-import { ArticlesRepositoryPrisma } from '../../infrastructure/repositories/articles.prisma.repository';
+import { ArticlesRepositoryPrisma } from '@infrastructure/repositories/articles.prisma.repository';
 
 // Use-cases
 import {
@@ -12,7 +12,7 @@ import {
     GetArticleByIDUseCase,
     GetAllArticlesUseCase,
     DeleteArticleUseCase
-} from "../../core/articles/use-cases"
+} from "@core/articles/use-cases"
 
 
 

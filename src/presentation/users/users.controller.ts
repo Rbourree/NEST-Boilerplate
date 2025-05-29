@@ -1,5 +1,5 @@
 import { Controller, Get, Headers, UseGuards, HttpStatus, HttpException, Param, Patch, Delete, Body } from '@nestjs/common';
-import { JwtAuthGuard } from '../../common/auth.guard';
+import { JwtAuthGuard } from '@common/auth.guard';
 
 import { 
     GetMeUseCase, 
@@ -7,7 +7,7 @@ import {
     UpdateUserUseCase, 
     GetAllUsersUseCase,
     DeleteUserUseCase
-} from '../../core/users/use-cases'
+} from '@core/users/use-cases'
 
 @Controller()
 export class UsersController {
