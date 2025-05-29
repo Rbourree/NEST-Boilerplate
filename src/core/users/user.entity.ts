@@ -20,7 +20,6 @@ type UserProps = z.infer<typeof UserProps>;
  * User entity representing a user in the system.
  * @class User
  * @description This class encapsulates the properties and behaviors of a user.
- * It includes methods for creating, updating, and retrieving user information.
  * @property {string} id_user - The unique identifier of the user.
  * @property {string} email - The user's email address.
  * @property {string} password - The user's password.
@@ -33,8 +32,6 @@ type UserProps = z.infer<typeof UserProps>;
  * @property {string | null} zipCode - The user's zip code.
  * @property {Date | null} dateOfBirth - The user's date of birth.
  * @property {string | null} phone - The user's phone number.
- * @description The User class represents a user in the system with various properties such as email, password, name, address, and contact information.
- * It provides methods to create a new user instance and retrieve user information in JSON format.
 */
 export class User {
     private readonly _id_user: string

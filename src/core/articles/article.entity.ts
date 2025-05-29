@@ -15,7 +15,6 @@ type ArticleProps = z.infer<typeof ArticleProps>;
  * Article entity representing an article in the system.
  * @class Article
  * @description This class encapsulates the properties and behaviors of an article.
- * It includes methods for updating the title and content of the article.
  * @property {string} id_article - The unique identifier of the article.
  * @property {string} title - The title of the article.
  * @property {string} content - The content of the article.
